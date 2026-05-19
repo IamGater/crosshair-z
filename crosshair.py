@@ -69,10 +69,11 @@ class CrosshairOverlay(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        w = self.width()
-        h = self.height()
-        cx = w // 2
-        cy = h // 2
+        screen = QApplication.primaryScreen()
+        global_center = screen.geometry().center()
+        local_center = self.mapFromGlobal(global_center)
+        cx = local_center.x()
+        cy = local_center.y()
 
         alpha_val = max(0, min(100, int(self.alpha)))
         col = QColor(self.color)
@@ -103,7 +104,8 @@ class CrosshairOverlay(QWidget):
             painter.drawLine(cx, cy + self.gap, cx, cy + self.gap + self.size)
 
         elif self.style.startswith("Dot"):
-            radius = max(1, self.thickness * 2)
+                # use overall `size` to control dot diameter (not `thickness`)
+            radius = max(1, self.size // 2)
             painter.setBrush(QBrush(outline_col))
             painter.setPen(Qt.PenStyle.NoPen)
             painter.drawEllipse(cx - radius - self.outline, cy - radius - self.outline,
