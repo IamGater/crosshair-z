@@ -309,14 +309,12 @@ class ModernHorizontalMenu(QMainWindow):
 
         self.overlay = CrosshairOverlay()
 
-        # connect sliders to update overlay
         self.size_slider.valueChanged.connect(self.update_overlay)
         self.thick_slider.valueChanged.connect(self.update_overlay)
         self.gap_slider.valueChanged.connect(self.update_overlay)
         self.outline_slider.valueChanged.connect(self.update_overlay)
         self.alpha_slider.valueChanged.connect(self.update_overlay)
 
-        # load persisted settings, apply and show overlay
         self.load_settings()
         self.update_overlay()
         self.overlay.show()
@@ -428,7 +426,6 @@ class ModernHorizontalMenu(QMainWindow):
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
-            # block signals while applying
             self.size_slider.blockSignals(True)
             self.thick_slider.blockSignals(True)
             self.gap_slider.blockSignals(True)
@@ -454,14 +451,12 @@ class ModernHorizontalMenu(QMainWindow):
                 except Exception:
                     pass
 
-            # unblock
             self.size_slider.blockSignals(False)
             self.thick_slider.blockSignals(False)
             self.gap_slider.blockSignals(False)
             self.outline_slider.blockSignals(False)
             self.alpha_slider.blockSignals(False)
 
-            # apply to overlay
             if hasattr(self, 'overlay'):
                 self.overlay.set_parameters(size=self.size_slider.value(),
                                             thickness=self.thick_slider.value(),
@@ -486,7 +481,6 @@ class ModernHorizontalMenu(QMainWindow):
         self.overlay.set_parameters(size=size, thickness=thickness, gap=gap,
                                     outline=outline, alpha=alpha,
                                     style=style, color=color)
-        # persist settings
         try:
             self.save_settings()
         except Exception:
